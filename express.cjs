@@ -27,6 +27,62 @@ app.get('/api/ingatlan', (req, res) => {
     });
 });
 
+app.post('/api/ingatlan', (req, res) => {
+    const kategoriaId = req.body?.kategoria;
+    let date = req.body?.hirdetesDatuma;
+    const freeOfCharge = req.body?.tehermentes;
+    const price = req.body?.ar;
+
+    const description = req.body?.leiras;
+    const imageUrl = req.body?.kepUrl;
+
+    let queryStr = "INSERT INTO ingatlanok";
+    var values = [];
+
+    if (date == undefined) {
+        const currentDate = new Date()
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const day = currentDate.getDay();
+        
+        const newDate = year.toString() + "-" + month.toString() + "-" + day.toString();
+        date = newDate;
+    }
+    
+    if (kategoriaId == undefined || freeOfCharge == undefined|| price == undefined) {
+        res.status(400).send('Hiányzó adatok.');
+    } 
+
+    queryStr += ' (kategoria, hirdetesDatuma, tehermentes, ar';
+    values.push(kategoriaId, date, freeOfCharge, price);
+    if (description) {
+        queryStr += ", leiras";
+        values.push(description);
+    }
+    if (imageUrl) {
+        queryStr += ', kepUrl';
+        values.push(imageUrl);
+    }
+    
+
+    let questionMarks = "(";
+    for (let i = 0; i < values.length - 1; i++) {
+        questionMarks += "?,"
+    }
+    questionMarks += "?) ";
+    queryStr += ') VALUES ' + questionMarks;
+
+    conn.query(queryStr, [...values],
+        (err, result, fields) => {
+            if (err) res.sendStatus(400);
+            if (result) {
+                const id = result.insertId;
+                res.status(201).json({Id: id});
+            }
+        }
+    );
+});
+
 const port = 3333;
 app.listen(port, () => {
     console.log('Express backend server is running on port', port);
