@@ -42,8 +42,8 @@ app.post('/api/ingatlan', (req, res) => {
     if (date == undefined) {
         const currentDate = new Date()
         const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const day = currentDate.getDay();
+        const month = currentDate.getMonth() + 1;
+        const day = currentDate.getDate();
         
         const newDate = year.toString() + "-" + month.toString() + "-" + day.toString();
         date = newDate;
