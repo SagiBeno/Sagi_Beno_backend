@@ -55,16 +55,16 @@ app.post('/api/ingatlan', (req, res) => {
 
     queryStr += ' (kategoria, hirdetesDatuma, tehermentes, ar';
     values.push(kategoriaId, date, freeOfCharge, price);
-    if (description) {
+
+    if (description != undefined) {
         queryStr += ", leiras";
         values.push(description);
     }
-    if (imageUrl) {
+    if (imageUrl != undefined) {
         queryStr += ', kepUrl';
         values.push(imageUrl);
     }
     
-
     let questionMarks = "(";
     for (let i = 0; i < values.length - 1; i++) {
         questionMarks += "?,"
@@ -78,6 +78,25 @@ app.post('/api/ingatlan', (req, res) => {
             if (result) {
                 const id = result.insertId;
                 res.status(201).json({Id: id});
+            }
+        }
+    );
+});
+
+app.delete('/api/ingatlan/:id', (req, res) => {
+    const id = req.params?.id;
+
+    conn.query(`
+            DELETE FROM ingatlanok
+            WHERE id = ?    
+        `,
+        [id],
+        (err, result, fields) => {
+            if (err) res.status(400).json('Connection error');
+            if (result) {
+                const modifiedRow = result.affectedRows;
+                if (modifiedRow != 0) res.sendStatus(204);
+                else res.sendStatus(404);
             }
         }
     );
