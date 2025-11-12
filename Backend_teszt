@@ -1,0 +1,88 @@
+{
+	"info": {
+		"_postman_id": "bc343aa3-49ef-4b30-aa75-8aa2e5ef6388",
+		"name": "Backend teszt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST : http://localhost:3333/api/ingatlan",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"_id\": 99,\r\n\t\"kategoria\": 2,\r\n\t\"leiras\": \"Eladó ...\",\r\n\t\"tehermentes\": true,\r\n\t\"ar\": 45000000,\r\n\t\"kepUrl\": \"https://pictures.com/apartman.jpg\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/ingatlan",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"ingatlan"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET : http://localhost:3333/api/ingatlan",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3333/api/ingatlan",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"ingatlan"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE : http://localhost:3333/api/ingatlan/8",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3333/api/ingatlan/8",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"ingatlan",
+						"8"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
