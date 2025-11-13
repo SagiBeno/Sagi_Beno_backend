@@ -1,7 +1,9 @@
 const express = require('express');
 const mysql = require('mysql2');
+const cors = require('cors');
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 const conn = mysql.createConnection({
@@ -16,11 +18,16 @@ app.get('/api/ingatlan', (req, res) => {
         SELECT ingatlanok.id, kategoriak.nev AS 'kategoria', ingatlanok.leiras, ingatlanok.hirdetesDatuma, ingatlanok.tehermentes, ingatlanok.ar, ingatlanok.kepUrl
         FROM ingatlanok
         INNER JOIN kategoriak
-        ON kategoriak.id = ingatlanok.id`
+        ON kategoriak.id = ingatlanok.kategoria`
     , (err, result, fields) => {
-        if (err) res.status(404).json({error: err});
+        if (err) res.status(500).json({error: err});
         if (result) {
-            res.status(200).json(result);
+
+            const refactoredResults = result.map(row => ({
+                ...row, tehermentes: !!row.tehermentes,
+                hirdetesDatuma: row.hirdetesDatuma.toISOString().slice(0, 10)
+             }));
+            res.status(200).json(refactoredResults);
         } else {
             res.status(403).json({error: err})
         }
@@ -74,7 +81,7 @@ app.post('/api/ingatlan', (req, res) => {
 
     conn.query(queryStr, [...values],
         (err, result, fields) => {
-            if (err) res.sendStatus(400);
+            if (err) res.status(500).json({err: err});
             if (result) {
                 const id = result.insertId;
                 res.status(201).json({Id: id});
@@ -92,7 +99,7 @@ app.delete('/api/ingatlan/:id', (req, res) => {
         `,
         [id],
         (err, result, fields) => {
-            if (err) res.status(400).json('Connection error');
+            if (err) res.status(500).json('Connection error');
             if (result) {
                 const modifiedRow = result.affectedRows;
                 if (modifiedRow != 0) res.sendStatus(204);
