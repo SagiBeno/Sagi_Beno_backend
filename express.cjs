@@ -114,7 +114,7 @@ app.delete('/api/ingatlan/:id', (req, res) => {
             if (result) {
                 const modifiedRow = result.affectedRows;
                 if (modifiedRow != 0) res.sendStatus(204);
-                else res.sendStatus(404);
+                else res.status(404).send("Az ingatlan nem létezik");
             }
         }
     );
