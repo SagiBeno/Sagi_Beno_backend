@@ -13,6 +13,11 @@ const conn = mysql.createConnection({
     database: 'ingatlan'
 });
 
+conn.connect(err => {
+    if (err) console.warn
+    else console.log('Succesfully connected to database ingatlan.')
+})
+
 app.get('/api/ingatlan', (req, res) => {
     conn.query(`
         SELECT ingatlanok.id, kategoriak.nev AS 'kategoria', ingatlanok.leiras, ingatlanok.hirdetesDatuma, ingatlanok.tehermentes, ingatlanok.ar, ingatlanok.kepUrl
