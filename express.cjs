@@ -40,6 +40,7 @@ app.get('/api/ingatlan', (req, res) => {
 });
 
 app.post('/api/ingatlan', (req, res) => {
+    const _id = req.body?._id
     const kategoriaId = req.body?.kategoria;
     let date = req.body?.hirdetesDatuma;
     const freeOfCharge = req.body?.tehermentes;
@@ -63,10 +64,15 @@ app.post('/api/ingatlan', (req, res) => {
     
     if (kategoriaId == undefined || freeOfCharge == undefined|| price == undefined) {
         res.status(400).send('Hiányzó adatok.');
-    } 
-
-    queryStr += ' (kategoria, hirdetesDatuma, tehermentes, ar';
-    values.push(kategoriaId, date, freeOfCharge, price);
+    } else {
+        if (_id == undefined) {
+            queryStr += ' (kategoria, hirdetesDatuma, tehermentes, ar';
+            values.push(kategoriaId, date, freeOfCharge, price);
+        } else {
+            queryStr += ' (id, kategoria, hirdetesDatuma, tehermentes, ar';
+            values.push(_id, kategoriaId, date, freeOfCharge, price);
+        }
+    }
 
     if (description != undefined) {
         queryStr += ", leiras";
